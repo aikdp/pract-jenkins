@@ -45,7 +45,7 @@ pipeline{
         stage("Code Quality Check"){
             //when condition used before option, if condition true, this stage will execute, otherwise don't
              when {
-                    expression {GIT_BRANCH == '.*/main'}
+                    expression {GIT_BRANCH == */main}
                 }
             steps{
                echo "Qulaity Check PASSED, As this is main branch"
