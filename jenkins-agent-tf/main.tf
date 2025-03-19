@@ -36,7 +36,7 @@ resource "aws_instance" "jenkins_agent" {
   }
   
   #Spot Instance
-  instance_type = var.instance_type
+  instance_type = "t3.micro"
   #  instance_market_options {
   #   market_type = "spot"
   #   spot_options {
