@@ -9,7 +9,7 @@ pipeline{
         timeout(time: 30, unit: 'MINUTES') //pipeline will stop/abort when specified time period
     }
     environment{
-        docker_user_id = "kdprasad028"
+        docker_user_id = 'kdprasad028'
         component = ""
 
     }
@@ -22,7 +22,6 @@ pipeline{
             steps{
                 script {
                     // Read the JSON file
-                    cd backend/node
                     def packageJson = readJSON file: 'package.json'
                     imageVersion = packageJson.version
                     // Access JSON properties
@@ -49,15 +48,15 @@ pipeline{
                 """
             }
         }
-        stage("Push Image to ECR"){
-            steps{
-                sh """
-                    cd backend
-                    docker push  -t ${docker_user_id}/${params.component}:${imageVersion} .
-                    docker images
-                """
-        }
-    }
+        // stage("Push Image to ECR"){
+        //     steps{
+        //         sh """
+        //             cd backend
+        //             docker push  -t ${docker_user_id}/${params.component}:${imageVersion} .
+        //             docker images
+        //         """
+        //     }
+        // }
       
     }
     //post build section
