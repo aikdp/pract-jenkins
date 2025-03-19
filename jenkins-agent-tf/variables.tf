@@ -7,7 +7,12 @@ variable "subnet_id" {
 
 
 #SG
-variable "sg_id" {
+variable "master_sg_id" {
+  type = list(string)
+  default = ["sg-0f487d954cbe820ef"]
+}
+
+variable "agent_sg_id" {
   type = list(string)
   default = ["sg-0f487d954cbe820ef"]
 }

@@ -3,7 +3,7 @@ resource "aws_instance" "jenkins_server" {
   ami = data.aws_ami.rhel9.id
  
   subnet_id     = var.subnet_id
-  security_groups = var.sg_id
+  security_groups = var.master_sg_id
   root_block_device {
         delete_on_termination = true
         volume_type = "gp3"
@@ -26,7 +26,7 @@ resource "aws_instance" "jenkins_agent" {
   ami = data.aws_ami.rhel9.id
  
   subnet_id     = var.subnet_id
-  security_groups = var.sg_id
+  security_groups = var.agent_sg_id
 
   #EBS Volume
   root_block_device {
