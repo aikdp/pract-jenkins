@@ -24,7 +24,8 @@ pipeline{
         }
     }
     //post build
-    always{
+   post{
+     always{
         echo "I always run when pipeline running"
         deleteDir()    //Cleans up workspace after every build.
     }
@@ -37,6 +38,7 @@ pipeline{
     regression {
         echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
     }
+   }
 }
 
 // Why Use deleteDir() in post.always?
