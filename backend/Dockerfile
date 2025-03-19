@@ -14,8 +14,8 @@ RUN npm install
 #Stage-2
 FROM node:alpine
 ENV DB_HOST="mysql"
-RUN groupadd -S expense && \
-    useradd -S expense -G expense && \
+RUN addgroup -S expense && \
+    adduser -S expense -G expense && \
     mkdir -p /opt/server && \
     chown -R expense:expense /opt/server
 WORKDIR /opt/server
