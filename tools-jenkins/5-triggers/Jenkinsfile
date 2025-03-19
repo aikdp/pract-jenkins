@@ -46,7 +46,8 @@ pipeline{
         stage("Deploy"){
             steps{
                 echo "I am from Deploy stage"
-                echo "This build is Triggered by GITHUB WEBHOOK Configuration"
+                // echo "This build is Triggered by GITHUB WEBHOOK Configuration"
+                echo "This build is Triggered by POLL SCM in jenkins Configuration"
             }
         }
         // stage("Parameters"){
