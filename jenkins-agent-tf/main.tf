@@ -9,6 +9,7 @@ resource "aws_instance" "jenkins_server" {
         volume_type = "gp3"
         volume_size = 50
   }
+  user_data = file("jenkins-master.sh")
   instance_type = var.instance_type.master
   #  instance_market_options {
   #   market_type = "spot"
