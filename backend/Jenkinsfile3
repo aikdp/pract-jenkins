@@ -24,6 +24,7 @@ pipeline{
             steps{
                 script {
                     // Read the JSON file
+                    sh 'cd backend'
                     def packageJson = readJSON file: 'package.json'
                     imageVersion = packageJson.version
                     // Access JSON properties
@@ -42,6 +43,8 @@ pipeline{
             steps{
                 withCredentials([[credentialsId: 'aws-creds', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                     sh """
+                        cd backend
+
                         aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com
 
                         docker build -t  ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com/${params.component}:${imageVersion} .
@@ -57,6 +60,8 @@ pipeline{
             steps{
                 withCredentials([[credentialsId: 'aws-creds', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                     sh """
+                        cd backend/helm
+
                         aws eks update-kubeconfig -- region ${region} --name ${project}-${params.ENVIRONMENT}
 
                         sed -i 's/IMAGE_VERSION/${imageVesrion}/g' values-${params.ENVIRONMENT}.yaml

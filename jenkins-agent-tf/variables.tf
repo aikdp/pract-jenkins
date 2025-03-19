@@ -14,7 +14,7 @@ variable "sg_id" {
 
 #Instance type
 variable "instance_type" {
-    default = "t2.medium"
+    default = "t3.small"
 }
 
 #Zone NAme
