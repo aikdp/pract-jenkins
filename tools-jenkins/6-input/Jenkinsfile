@@ -2,7 +2,7 @@ pipeline{
     agent any
     options{
         disableConcurrentBuilds() 
-        retry(2)    //it will retry 2 times, if pipeline failure
+        // retry(2)    //it will retry 2 times, if pipeline failure
         timeout(time: 20, unit: 'MINUTES') //pipeline will stop/abort when specified time period
     }
     parameters {
@@ -34,7 +34,7 @@ pipeline{
         }
         stage("Parameters"){
             steps{
-                echo "Hello ${param.PERSON}"    //we can dynamically pass parameters
+                echo "Hello ${params.PERSON}"    //we can dynamically pass parameters
                 echo "Tell me you biograpghy: ${params.BIOGRAPHY}"
                 echo "Select Toggle is: ${params.TOGGLE}"
                 echo "Select choices: ${params.CHOICE}"
