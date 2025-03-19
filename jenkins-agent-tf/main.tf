@@ -3,13 +3,13 @@ resource "aws_instance" "jenkins_server" {
   ami = data.aws_ami.rhel9.id
  
   subnet_id     = var.subnet_id
-  vpc_security_group_ids = var.master_sg_id
+  vpc_security_group_ids = var.sg_id
   root_block_device {
         delete_on_termination = true
         volume_type = "gp3"
         volume_size = 50
   }
-  instance_type = var.instance_type
+  instance_type = var.instance_type.master
   #  instance_market_options {
   #   market_type = "spot"
   #   spot_options {
@@ -26,7 +26,7 @@ resource "aws_instance" "jenkins_agent" {
   ami = data.aws_ami.rhel9.id
  
   subnet_id     = var.subnet_id
-  vpc_security_group_ids = var.agent_sg_id
+  vpc_security_group_ids = var.sg_id
 
   #EBS Volume
   root_block_device {
@@ -36,7 +36,7 @@ resource "aws_instance" "jenkins_agent" {
   }
   
   #Spot Instance
-  instance_type = "t3.micro"
+  instance_type = var.instance_type.agent
   #  instance_market_options {
   #   market_type = "spot"
   #   spot_options {

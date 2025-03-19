@@ -7,19 +7,19 @@ variable "subnet_id" {
 
 
 #SG
-variable "master_sg_id" {
+variable "sg_id" {
   type = list(string)
   default = ["sg-0f487d954cbe820ef"]
 }
 
-variable "agent_sg_id" {
-  type = list(string)
-  default = ["sg-0f487d954cbe820ef"]
-}
+
 
 #Instance type
 variable "instance_type" {
-    default = "t3.small"
+    default = {
+      master = "t3.small"
+      agent = "t3.micro"
+    }
 }
 
 #Zone NAme
