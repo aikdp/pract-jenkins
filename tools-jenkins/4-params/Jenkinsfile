@@ -1,0 +1,64 @@
+pipeline{
+    agent any
+    options{
+        disableConcurrentBuilds() 
+        retry(2)    //it will retry 2 times, if pipeline failure
+        timeout(time: 10, unit: 'MINUTES') //pipeline will stop/abort when specified time period
+    }
+    parameters {
+    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+
+    text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
+
+    booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
+
+    choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
+
+    password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
+    }
+    stages{
+        stage("Build"){
+            steps{
+                echo "echo hello world"
+            }
+        }
+        stage("Test"){
+            steps{
+                echo "I am from Test stage"
+            }
+        }
+        stage("Deploy"){
+            steps{
+                echo "I am from Deploy stage"
+            }
+        }
+        stage("Parameters"){
+            steps{
+                echo "Hello ${param.PERSON}"    //we can dynamically pass parameters
+                echo "Tell me you biograpghy: ${params.BIOGRAPHY}"
+                echo "Select Toggle is: ${params.TOGGLE}"
+                echo "Select choices: ${params.CHOICE}"
+                echo "Enter your Password: ${params.PASSWORD}"
+            }
+        }
+    }
+    //post build section
+    always{
+        echo "I always run when pipeline running"
+        deleteDir()    //Cleans up workspace after every build.
+    }
+    failure{
+        echo "Pipeline is FAILED"
+    }
+    success {
+        echo "Pipeline is Success"
+    }
+    regression {
+        echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
+    }
+}
+
+// Why Use deleteDir() in post.always?
+// Ensures cleanup happens after every build, no matter the result.
+// Helps prevent workspace pollution, especially for shared agents.
+// Frees up disk space on Jenkins workers.

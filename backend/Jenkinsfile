@@ -1,0 +1,58 @@
+pipeline{
+    agent any
+    options{
+        disableConcurrentBuilds() 
+        retry(2)    //it will retry 2 times, if pipeline failure
+        timeout(time: 30, unit: 'MINUTES') //pipeline will stop/abort when specified time period
+    }
+    environment{
+        docker_user_id = "kdprasad028"
+        component = ""
+
+    }
+    parameters {
+    string(name: 'component', defaultValue: 'backend', description: 'Component name')
+
+    }
+    stages{
+        stage{
+            steps{
+                script {
+                    // Read the JSON file
+                    def packageJson = readJSON file: 'package.json'
+                    appVersion = packageJson.version
+                    // Access JSON properties
+                    // echo "Version is: ${packageJson.version}"   //you can directlyb use this line as well
+                    echo "Version is: ${appVersion}"
+                }          
+            }
+        }
+        stage("Build Image"){
+            steps{
+                sh '''
+                    docker build -t ${docker_user_id}/${params.component}:${appVersion} .
+
+                    docker push ${docker_user_id}/${params.component}:${appVersion}
+
+                    docker images
+                '''
+            }
+        }
+      
+    }
+    //post build section
+    always{
+        echo "I always run when pipeline running"
+        deleteDir()    //Cleans up workspace after every build.
+    }
+    failure{
+        echo "Pipeline is FAILED"
+    }
+    success {
+        echo "Pipeline is Success"
+    }
+    regression {
+        echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
+    }
+}
+

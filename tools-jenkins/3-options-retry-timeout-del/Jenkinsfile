@@ -1,0 +1,45 @@
+pipeline{
+    agent any
+    options{
+        disableConcurrentBuilds() 
+        retry(2)    //it will retry 2 times, if pipeline failure
+        timeout(time: 10, unit: 'SECONDS') //pipeline will stop/abort when specified time period
+    }
+    stages{
+        stage("Build"){
+            steps{
+                sh "echo hello world"
+                sh 'sleep 10'   //it will sleep 10 sec, means next stages will FAIL, if u not remove timeout
+            }
+        }
+        stage("Test"){
+            steps{
+                sh "echo I am from Test stage"
+            }
+        }
+        stage("Deploy"){
+            steps{
+                sh "echo I am from Deploy stage"
+            }
+        }
+    }
+    //post build
+    always{
+        echo "I always run when pipeline running"
+        deleteDir()    //Cleans up workspace after every build.
+    }
+    failure{
+        echo "Pipeline is FAILED"
+    }
+    success {
+        echo "Pipeline is Success"
+    }
+    regression {
+        echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
+    }
+}
+
+// Why Use deleteDir() in post.always?
+// Ensures cleanup happens after every build, no matter the result.
+// Helps prevent workspace pollution, especially for shared agents.
+// Frees up disk space on Jenkins workers.

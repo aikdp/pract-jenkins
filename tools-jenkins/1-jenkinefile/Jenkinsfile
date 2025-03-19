@@ -1,0 +1,33 @@
+pipeline{
+    agent any
+    stages{
+        stage("Build"){
+            steps{
+                sh "echo hello world"
+            }
+        }
+        stage("Test"){
+            steps{
+                sh "echo I am from Test stage"
+            }
+        }
+        stage("Deploy"){
+            steps{
+                sh "echo I am from Deploy stage"
+            }
+        }
+    }
+    //post build
+    always{
+        echo "I always run when pipeline running"
+    }
+    failure{
+        echo "Pipeline is FAILED"
+    }
+    success {
+        echo "Pipeline is Success"
+    }
+    regression {
+        echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
+    }
+}
