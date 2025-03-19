@@ -50,7 +50,7 @@ pipeline{
         }
         stage("Parameters"){
             steps{
-                echo "Hello ${param.PERSON}"    //we can dynamically pass parameters
+                echo "Hello ${params.PERSON}"    //we can dynamically pass parameters
                 echo "Tell me you biograpghy: ${params.BIOGRAPHY}"
                 echo "Select Toggle is: ${params.TOGGLE}"
                 echo "Select choices: ${params.CHOICE}"
