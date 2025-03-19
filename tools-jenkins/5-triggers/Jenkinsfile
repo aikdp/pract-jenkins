@@ -46,7 +46,7 @@ pipeline{
         stage("Deploy"){
             steps{
                 echo "I am from Deploy stage"
-                echo "This Triggering form webhook from GITHUB"
+                echo "This build is Triggered by GITHUB WEBHOOK Configuration"
             }
         }
         // stage("Parameters"){
