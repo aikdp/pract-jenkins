@@ -21,17 +21,17 @@ pipeline{
         retry(2)    //it will retry 2 times, if pipeline failure
         timeout(time: 10, unit: 'MINUTES') //pipeline will stop/abort when specified time period
     }
-    parameters {
-    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+    // parameters {
+    // string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
 
-    text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
+    // text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
 
-    booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
+    // booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
 
-    choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
+    // choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
 
-    password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
-    }
+    // password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
+    // }
     stages{
         stage("Build"){
             steps{
@@ -46,17 +46,18 @@ pipeline{
         stage("Deploy"){
             steps{
                 echo "I am from Deploy stage"
+                echo "This Triggering form webhook from GITHUB"
             }
         }
-        stage("Parameters"){
-            steps{
-                echo "Hello ${params.PERSON}"    //we can dynamically pass parameters
-                echo "Tell me you biograpghy: ${params.BIOGRAPHY}"
-                echo "Select Toggle is: ${params.TOGGLE}"
-                echo "Select choices: ${params.CHOICE}"
-                echo "Enter your Password: ${params.PASSWORD}"
-            }
-        }
+        // stage("Parameters"){
+        //     steps{
+        //         echo "Hello ${params.PERSON}"    //we can dynamically pass parameters
+        //         echo "Tell me you biograpghy: ${params.BIOGRAPHY}"
+        //         echo "Select Toggle is: ${params.TOGGLE}"
+        //         echo "Select choices: ${params.CHOICE}"
+        //         echo "Enter your Password: ${params.PASSWORD}"
+        //     }
+        // }
     }
     //post build section
    post{
