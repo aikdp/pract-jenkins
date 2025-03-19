@@ -8,7 +8,7 @@ terraform {
 
   backend "s3" {
     bucket         = "vpc-module-rs"
-    key            = "jenkins-server-tfstate"
+    key            = "jenkins-server-practice-out"
     region         = "us-east-1"
     dynamodb_table = "vpc-module-locking"
   }
