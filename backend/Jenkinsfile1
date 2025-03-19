@@ -46,7 +46,7 @@ pipeline{
             steps{
                 sh """
                     cd backend
-                    docker build -t ${params.component}:${imageVersion} .
+                    docker build -t ${docker_user_id}/${params.component}:${imageVersion} .
                     docker images
                 """
             }
