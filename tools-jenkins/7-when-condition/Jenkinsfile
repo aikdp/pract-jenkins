@@ -1,7 +1,5 @@
 pipeline{
-    agent {
-        label 'AGENT-1'
-    }
+    agent any
     options{
         disableConcurrentBuilds() 
         // retry(2)    //it will retry 2 times, if pipeline failure
