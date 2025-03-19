@@ -1,0 +1,17 @@
+#create Service to commu frontend Pods
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: expense
+spec:
+  selector:
+    project: robo
+    state: qa
+    tier: frontend
+  ports:
+  - name: frontend-port
+    protocol: TCP
+    port: {{ .Values.service.servicePort }}  #here service
+    targetPort: 8080  #container port, nginx port I chnaged to 8080, as we are using baremin OS, not opens 80
+  type: LoadBalancer

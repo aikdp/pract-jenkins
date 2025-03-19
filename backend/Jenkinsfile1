@@ -1,5 +1,7 @@
 pipeline{
-    agent any
+    agent{
+        label 'AGENT-1'
+    }
     options{
         disableConcurrentBuilds() 
         retry(2)    //it will retry 2 times, if pipeline failure
@@ -15,28 +17,42 @@ pipeline{
 
     }
     stages{
-        stage{
+        stage("Read Vesrion"){
             steps{
                 script {
                     // Read the JSON file
                     def packageJson = readJSON file: 'package.json'
-                    appVersion = packageJson.version
+                    imageVersion = packageJson.version
                     // Access JSON properties
-                    // echo "Version is: ${packageJson.version}"   //you can directlyb use this line as well
-                    echo "Version is: ${appVersion}"
+                    // echo "Version is: ${packageJson.version}"   //you can directly use this line as well
+                    echo "Version is: ${imageVersion}"
                 }          
             }
         }
+        stage("Build NPM"){
+            steps{
+                sh 'dnf module disable nodejs -y'
+                sh 'dnf module enable nodejs:20 -y'
+                sh 'dnf install nodejs -y'
+                sh 'npm install'
+            }
+        }
+        //install docker in jenkins agent
         stage("Build Image"){
             steps{
                 sh '''
-                    docker build -t ${docker_user_id}/${params.component}:${appVersion} .
-
-                    docker push ${docker_user_id}/${params.component}:${appVersion}
-
+                    docker build -t ${docker_user_id}/${params.component}:${imageVersion} .
                     docker images
                 '''
             }
+        }
+        stage("Push Image to ECR"){
+        steps{
+            sh '''
+                docker push  -t ${docker_user_id}/${params.component}:${imageVersion} .
+                docker images
+            '''
+        }
         }
       
     }

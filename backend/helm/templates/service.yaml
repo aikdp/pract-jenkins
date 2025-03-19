@@ -1,0 +1,16 @@
+#create Service to commu backend Pods
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: expense
+spec:
+  selector:
+    project: robo
+    state: qa
+    tier: backend
+  ports:
+  - name: backend-port
+    protocol: TCP
+    port: {{ .Values.service.servicePort }}  #here service port
+    targetPort: 8080

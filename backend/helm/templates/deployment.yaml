@@ -1,0 +1,72 @@
+#create ConfigMap for DB_HOST=mysql
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: expense
+data:
+  DB_HOST: "{{ .Values.configmap.DB_HOST }}"  # rds address
+---
+#create backend YamlFile
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: expense
+  labels:
+    project: robo
+    state: qa
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: robo
+      state: qa
+      tier: backend
+  template:
+    metadata:
+      labels:
+        project: robo
+        state: qa
+        tier: backend
+    spec:
+      # containers:
+      #   - name: backend
+      #     image: "{{ .Values.deployment.imageName }}:{{ .Values.deployment.imageVersion }}"
+      #     resources:
+      #       requests:
+      #         cpu: 100m
+      #         memory: 128Mi
+      #       #limits should be greater than or equal to requests
+      #       limits:
+      #         cpu: 100m
+      #         memory: 128Mi
+      initContainers: #init container run before main contaner run, if mysql is not up and runing, then backend POD will will
+        - name: check-mysql
+          image: busybox:1.28
+          command: ['sh', '-c', "until nslookup mysql; do echo waiting for mysql; sleep 2; done"]
+      containers:
+          - name: backend
+            image: "{{ .Values.deployment.imageName }}:{{ .Values.deployment.imageVersion }}"
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:            #limits should be greater than or equal to requests
+                cpu: 100m
+                memory: 128Mi
+            envFrom:
+            - configMapRef:
+                name: backend-config
+            readinessProbe:
+              tcpSocket:
+                port: 8080
+              initialDelaySeconds: 15
+              periodSeconds: 10
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: 8080
+              initialDelaySeconds: 15
+              periodSeconds: 10

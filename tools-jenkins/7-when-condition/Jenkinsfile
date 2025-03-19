@@ -1,5 +1,7 @@
 pipeline{
-    agent any
+    agent {
+        label 'AGENT-1'
+    }
     options{
         disableConcurrentBuilds() 
         retry(2)    //it will retry 2 times, if pipeline failure
@@ -41,11 +43,13 @@ pipeline{
                 echo "Enter your Password: ${params.PASSWORD}"
             }
         }
-        stage("Condition"){
-            steps{
-                when {
-                    expression {env.GIT_BRNACH == '*/main'}
+        stage("Code Quality Check"){
+            //when condition used before option, if condition true, this stage will execute, otherwise don't
+             when {
+                    expression {env.GIT_BRNACH == '*/main'} 
                 }
+            steps{
+               echo "Qulaity Check PASSED"
             }
         }
     }

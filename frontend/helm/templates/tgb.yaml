@@ -1,0 +1,12 @@
+#Create TArget Group Binding
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: alb-tgb
+  namespace: expense
+spec:
+  serviceRef:
+    name: frontend # route traffic to the frontend service
+    port: 8080
+  targetGroupARN: {{ .Values.tgb.arn }}
+  targetType: ip

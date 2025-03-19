@@ -1,0 +1,10 @@
+deployment:
+  imageName: 537124943253.dkr.ecr.us-east-1.amazonaws.com/backend
+  imageVersion: IMAGE_VERSION
+  # replica: 2
+hpa:
+  cpuUtilization: 15
+service:
+  servicePort: 8080
+configmap:
+  DB_HOST:  # rds Address
