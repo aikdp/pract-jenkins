@@ -13,6 +13,7 @@ pipeline{
         }
         stage("Deploy"){
             steps{
+                sh "env"
                 sh "echo I am from Deploy stage"
             }
         }
