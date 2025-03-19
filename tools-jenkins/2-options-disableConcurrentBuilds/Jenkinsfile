@@ -1,7 +1,5 @@
 pipeline{
-    agent {
-        label 'AGENT-1'
-    }
+    agent any
     options{
         disableConcurrentBuilds()   // at a time two or more builds not allowed. wait once running pipleine executes compltes, then new build will run
         //isableConcurrentBuilds(abortPrevious: true)  //means stop running one and start new build
