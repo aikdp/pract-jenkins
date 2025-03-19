@@ -55,7 +55,7 @@ pipeline{
             steps{
                 sh """
                     cd backend
-                    docker push  -t ${docker_user_id}/${params.component}:${imageVersion}
+                    docker push ${docker_user_id}/${params.component}:${imageVersion}
                     docker images
                 """
             }
