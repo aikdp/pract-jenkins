@@ -34,10 +34,12 @@ pipeline{
         }
         stage("Build NPM"){
             steps{
-                sh 'sudo dnf module disable nodejs -y'
-                sh 'sudo dnf module enable nodejs:20 -y'
-                sh 'sudo dnf install nodejs -y'
-                sh 'sudo npm install'
+                script{
+                    sh 'sudo dnf module disable nodejs -y'
+                    sh 'sudo dnf module enable nodejs:20 -y'
+                    sh 'sudo dnf install nodejs -y'
+                    sh 'sudo npm install'
+                }
             }
         }
         //install docker in jenkins agent
