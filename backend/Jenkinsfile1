@@ -5,7 +5,7 @@ pipeline{
     // }
     options{
         disableConcurrentBuilds() 
-        retry(2)    //it will retry 2 times, if pipeline failure
+        // retry(2)    //it will retry 2 times, if pipeline failure
         timeout(time: 30, unit: 'MINUTES') //pipeline will stop/abort when specified time period
     }
     environment{
@@ -22,7 +22,7 @@ pipeline{
             steps{
                 script {
                     // Read the JSON file
-                    sh 'cd backend/node'
+                    cd backend/node
                     def packageJson = readJSON file: 'package.json'
                     imageVersion = packageJson.version
                     // Access JSON properties
