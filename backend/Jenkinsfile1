@@ -57,7 +57,7 @@ pipeline{
                    withCredentials([usernamePassword(credentialsId: 'docker_id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh """
                             cd backend
-                            'echo "$PASSWORD" | docker login --username "$USERNAME" --password-stdin'
+                            'echo "$PASSWORD" | /usr/bin/docker login --username $USERNAME --password-stdin'
                             docker push ${docker_user_id}/${params.component}:${imageVersion}
                             docker images
                         """
