@@ -18,7 +18,7 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
 # Install Jenkins Plugins:
 1. Pipeline: Stage View: Pipeline Stages
-2. Pipeline: Utility Steps:     Reading files
+2. Pipeline Utility Steps:     Reading files
 3. AWS Credentails : Store Credentails
 4. AWS steps    
 5. Rebuilder    : check previous builds
