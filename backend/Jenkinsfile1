@@ -54,10 +54,11 @@ pipeline{
         stage("Push Image to ECR"){
             steps{
                 script{
-                    withCredentials([usernamePassword(credentialsId: 'docker_id', description: 'docker_id')]){
+                   withCredentials([usernamePassword(credentialsId: 'docker_id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh """
                             cd backend
-                            docker login -u kdprasad028
+                            echo 'Using credentials for $USERNAME'
+                            docker login -u $USERNAME
                             docker push ${docker_user_id}/${params.component}:${imageVersion}
                             docker images
                         """
