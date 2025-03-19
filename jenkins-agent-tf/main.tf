@@ -28,6 +28,7 @@ resource "aws_instance" "jenkins_agent" {
  
   subnet_id     = var.subnet_id
   vpc_security_group_ids = var.sg_id
+  user_data = file("jenkins-agent.sh")
 
   #EBS Volume
   root_block_device {

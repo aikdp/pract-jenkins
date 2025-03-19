@@ -59,3 +59,18 @@ VALIDATE $? "Resize of RootVol"
 
 xfs_growfs /var
 VALIDATE $? "Resize of VarVol"
+
+
+#Install NodeJS
+sudo dnf module disable nodejs -y
+sudo dnf enable module nodejs:20 -y
+sudo dnf install nodejs -y
+VALIDATE $? "NodeJS installation"
+
+#Terraform 
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+sudo yum -y install terraform
+terraform -version
+VALIDATE $? "Terraform Installation"
+
