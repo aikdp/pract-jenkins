@@ -34,7 +34,7 @@ pipeline{
         }
         stage("Build NPM"){
             steps{
-                    // sh 'cd backend/node'
+                    sh 'cd backend/node'
                     // sh 'sudo dnf module disable nodejs -y'
                     // sh 'sudo dnf module enable nodejs:20 -y'
                     // sh 'sudo dnf install nodejs -y'
