@@ -51,15 +51,15 @@ pipeline{
                 """
             }
         }
-        // stage("Push Image to ECR"){
-        //     steps{
-        //         sh """
-        //             cd backend
-        //             docker push  -t ${docker_user_id}/${params.component}:${imageVersion} .
-        //             docker images
-        //         """
-        //     }
-        // }
+        stage("Push Image to ECR"){
+            steps{
+                sh """
+                    cd backend
+                    docker push  -t ${docker_user_id}/${params.component}:${imageVersion} .
+                    docker images
+                """
+            }
+        }
       
     }
     //post build section
