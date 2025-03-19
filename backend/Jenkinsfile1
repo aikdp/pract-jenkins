@@ -3,7 +3,7 @@ pipeline{
     // agent{
     //     label 'AGENT-1'
     // }
-    // options{
+    options{
         disableConcurrentBuilds() 
         retry(2)    //it will retry 2 times, if pipeline failure
         timeout(time: 30, unit: 'MINUTES') //pipeline will stop/abort when specified time period
@@ -57,22 +57,24 @@ pipeline{
                     docker images
                 """
         }
-        }
+    }
       
     }
     //post build section
-    always{
-        echo "I always run when pipeline running"
-        deleteDir()    //Cleans up workspace after every build.
+    post{
+        always{
+            echo "I always run when pipeline running"
+            deleteDir()    //Cleans up workspace after every build.
+        }
+        failure{
+            echo "Pipeline is FAILED"
+        }
+        success {
+            echo "Pipeline is Success"
+        }
+        regression {
+            echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
+        }
     }
-    failure{
-        echo "Pipeline is FAILED"
-    }
-    success {
-        echo "Pipeline is Success"
-    }
-    regression {
-        echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
-    }
-}
+ }
 
