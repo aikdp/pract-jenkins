@@ -21,6 +21,7 @@ pipeline{
     post {
         always{
             echo "I always run when pipeline running"
+            deleteDir()
         }
         failure{
             echo "Pipeline is FAILED"
