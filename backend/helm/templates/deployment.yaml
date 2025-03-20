@@ -74,6 +74,6 @@ spec:
               periodSeconds: 10
             startupProbe:
               tcpSocket:
-                port: 3306
+                port: 8080
               failureThreshold: 30
               periodSeconds: 10
