@@ -1,5 +1,5 @@
 deployment:
-  imageName: 537124943253.dkr.ecr.us-east-1.amazonaws.com/backend
+  imageName: 537124943253.dkr.ecr.us-east-1.amazonaws.com/expense/dev/backend
   imageVersion: IMAGE_VERSION
   # replica: 2
 hpa:
