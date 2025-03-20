@@ -38,15 +38,16 @@ pipeline{
         stage("Build docker Image"){
             steps{
                 withCredentials([[credentialsId: 'aws-creds', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                    sh """
+                     sh """
                         cd frontend
+                        
                         aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com
 
-                        docker build -t  ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com/${params.component}:${imageVersion} .
-
+                        docker build -t ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${params.ENVIRONMENT}/${params.component}:${imageVersion} .
+                       
                         docker images
 
-                        docker push ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com/${params.component}:${imageVersion}
+                        docker push ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${params.ENVIRONMENT}/${params.component}:${imageVersion}
                     """
                 }
             }
