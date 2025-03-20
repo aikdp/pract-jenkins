@@ -4,8 +4,9 @@ pipeline{
     }
     options{
         disableConcurrentBuilds() 
-        retry(2)    //it will retry 2 times, if pipeline failure
+        // retry(2)    //it will retry 2 times, if pipeline failure
         timeout(time: 30, unit: 'MINUTES') //pipeline will stop/abort when specified time period
+        ansiColor('xterm')
     }
     environment{
         docker_user_id = 'kdprasad028'
@@ -22,25 +23,31 @@ pipeline{
         stage("Read Vesrion"){
             steps{
                 script {
-                    // Read the JSON file
-                    sh 'cd backend'
-                    def packageJson = readJSON file: 'package.json'
-                    imageVersion = packageJson.version
-                    // Access JSON properties
-                    // echo "Version is: ${packageJson.version}"   //you can directly use this line as well
-                    echo "Version is: ${imageVersion}"
+                    dir('backend/node'){
+                        // Read the JSON file
+                        def packageJson = readJSON file: 'package.json'
+                        imageVersion = packageJson.version
+                        // Access JSON properties
+                        // echo "Version is: ${packageJson.version}"   //you can directly use this line as well
+                        echo "Version is: ${imageVersion}"
+                    } 
                 }          
             }
         }
+        //U need nodejs configs in the JENKINS-AGENT, before going to this Stage
         stage("Install dependencies"){
             steps{
-                sh 'npm install'
+                sh """
+                    cd backend/node
+
+                    npm install
+                """
             }
         }
-        //install docker in jenkins agent
+        //install docker in jenkins agent and Should AWS ECR repo created to push image
         stage("Build docker Image"){
             steps{
-                withCredentials([[credentialsId: 'aws-creds', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                withCredentials([aws(credentialsId: "aws-creds")]) {
                     sh """
                         cd backend
                         
@@ -57,18 +64,20 @@ pipeline{
         }
     }
     //post build section
-    always{
-        echo "I always run when pipeline running"
-        deleteDir()    //Cleans up workspace after every build.
-    }
-    failure{
-        echo "Pipeline is FAILED"
-    }
-    success {
-        echo "Pipeline is Success"
-    }
-    regression {
-        echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
-    }
+   post{
+        always{
+            echo "I always run when pipeline running"
+            deleteDir()    //Cleans up workspace after every build.
+        }
+        failure{
+            echo "Pipeline is FAILED"
+        }
+        success {
+            echo "Pipeline is Success"
+        }
+        regression {
+            echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
+        }
+   }
 }
 

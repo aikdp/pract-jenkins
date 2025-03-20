@@ -4,6 +4,7 @@ pipeline{
         disableConcurrentBuilds() 
         // retry(2)    //it will retry 2 times, if pipeline failure
         timeout(time: 20, unit: 'MINUTES') //pipeline will stop/abort when specified time period
+        ansiColor('xterm')
     }
     // parameters {
     // string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
@@ -54,19 +55,19 @@ pipeline{
     }
     //post build section
     post{
-    always{
-        echo "I always run when pipeline running"
-        deleteDir()    //Cleans up workspace after every build.
-    }
-    failure{
-        echo "Pipeline is FAILED"
-    }
-    success {
-        echo "Pipeline is Success"
-    }
-    regression {
-        echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
-    }
+        always{
+            echo "I always run when pipeline running"
+            deleteDir()    //Cleans up workspace after every build.
+        }
+        failure{
+            echo "Pipeline is FAILED"
+        }
+        success {
+            echo "Pipeline is Success"
+        }
+        regression {
+            echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
+        }
     }
 }
 

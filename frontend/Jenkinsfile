@@ -1,11 +1,13 @@
 pipeline{
-    agent{
-        label 'AGENT-1'
-    }
+    agent any
+    // agent{
+    //     label 'AGENT-1'
+    // }
     options{
         disableConcurrentBuilds() 
-        retry(2)    //it will retry 2 times, if pipeline failure
+        // retry(2)    //it will retry 2 times, if pipeline failure
         timeout(time: 30, unit: 'MINUTES') //pipeline will stop/abort when specified time period
+        ansiColor('xterm')
     }
     environment{
         project = 'expense'
@@ -15,15 +17,15 @@ pipeline{
         aws_account_id = '537124943253'
     }
     parameters {
-    string(name: 'component', defaultValue: 'frontend', description: 'Component name')
-    choice(name: 'ENVIRONMENT', choices: ['dev', 'qa', 'uat', 'pre-pod', 'prod'], description: 'Select environment')
+        string(name: 'component', defaultValue: 'frontend', description: 'Component name')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'qa', 'uat', 'pre-pod', 'prod'], description: 'Select environment')
     }
     stages{
         stage("Read Vesrion"){
             steps{
                 script {
+                    dir('frontend/code')
                     // Read the JSON file
-                    sh 'cd frontend'
                     def packageJson = readJSON file: 'package.json'
                     imageVersion = packageJson.version
                     // Access JSON properties
@@ -32,7 +34,7 @@ pipeline{
                 }          
             }
         }
-        //install docker in jenkins agent
+        //install docker in jenkins agent, if u are running this satge in agent.
         stage("Build docker Image"){
             steps{
                 withCredentials([[credentialsId: 'aws-creds', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
@@ -65,19 +67,21 @@ pipeline{
             }
         }
     }
-    //post build section
-    always{
-        echo "I always run when pipeline running"
-        deleteDir()    //Cleans up workspace after every build.
-    }
-    failure{
-        echo "Pipeline is FAILED"
-    }
-    success {
-        echo "Pipeline is Success"
-    }
-    regression {
-        echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
+    post{
+        //post build section
+        always{
+            echo "I always run when pipeline running"
+            deleteDir()    //Cleans up workspace after every build.
+        }
+        failure{
+            echo "Pipeline is FAILED"
+        }
+        success {
+            echo "Pipeline is Success"
+        }
+        regression {
+            echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
+        }
     }
 }
 

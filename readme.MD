@@ -4,13 +4,15 @@
 
 * Open browser, Sewrch: <Jenkins-Server-public-ip>:8080 or create route 53 record as jenkins.telugudevops.online:8080
 
-* Download Plugins:
+# Install Jenkins Plugins:
 1. Pipeline Utility Steps
 2. AnsiColor
 3. Pipeline Stage View
 4. Rebuilder
 5. AWS Credentials
-6. SonarQube Scanner, etc
+6. AWS Steps
+7. SonarQube Scanner
+8. Docker:Pipeline
 
 * Add Credentails of AWS account and if any.
 * Create Pipelines
@@ -54,7 +56,7 @@ GRANT ALL ON transactions.* TO 'expense'@'%';
 ```
 FLUSH PRIVILEGES;
 ```
-# RUN AWS LB COntroller Configuration to communicate with AWS ALB
+# RUN AWS LB Cpntroller Configuration to communicate with AWS ALB
 * Should install LB controller along with some OIDC, IAM Policies, IAM Role, Service Account, Helm to install AWS Load balancer Controller etc.
 
 1. Create an IAM OIDC provider. You can skip this step if you already have one for your cluster.

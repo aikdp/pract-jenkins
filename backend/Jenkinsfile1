@@ -7,6 +7,7 @@ pipeline{
         disableConcurrentBuilds() 
         // retry(2)    //it will retry 2 times, if pipeline failure
         timeout(time: 30, unit: 'MINUTES') //pipeline will stop/abort when specified time period
+        ansiColor('xterm')
     }
     environment{
         docker_user_id = 'kdprasad028'
@@ -32,7 +33,7 @@ pipeline{
                 }          
             }
         }
-        stage("Build NPM"){
+        stage("Install Dependecies of Nodejs"){
             steps{
                 sh """ 
                     cd backend/node
@@ -51,7 +52,8 @@ pipeline{
                 """
             }
         }
-        stage("Push Image to ECR"){
+        //Here, Pushed to DockerHub
+        stage("Push Image to DockerHub"){
             steps{
                 script{
                    withCredentials([usernamePassword(credentialsId: 'docker_id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
