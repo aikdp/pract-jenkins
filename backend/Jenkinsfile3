@@ -75,7 +75,7 @@ pipeline{
 
                         sed -i 's/IMAGE_VERSION/${imageVersion}/g' values-${params.ENVIRONMENT}.yaml
 
-                        helm upgrade --install ${params.component} -n ${project} -f values-${params.ENVIRONMENT}.yaml
+                        helm upgrade --install ${params.component} -n ${project} -f values-${params.ENVIRONMENT}.yaml .
                     """
                 }
             }
