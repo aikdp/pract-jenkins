@@ -49,17 +49,18 @@ lsblk
 growpart /dev/nvme0n1 4
 VALIDATE $? "Disk Partition"
 
-lvextend -l +50%FREE /dev/RootVG/rootVol 
+lvextend -L +10G /dev/mapper/RootVG-homeVol
+lvextend -L +10G /dev/mapper/RootVG-varVol
+lvextend -l +100%FREE /dev/mapper/RootVG-varTmpVol
 
+xfs_growfs /home
+VALIDATE $? "Resize of HOME"
 
-lvextend -l +50%FREE /dev/RootVG/varVol
-
-xfs_growfs /
-VALIDATE $? "Resize of RootVol"
+xfs_growfs /var/tmp
+VALIDATE $? "Resize of TEMP"
 
 xfs_growfs /var
-VALIDATE $? "Resize of VarVol"
-
+VALIDATE $? "Resize of VAR"
 
 #Install NodeJS
 sudo dnf module disable nodejs -y
