@@ -1,5 +1,5 @@
 deployment:
-  imageName: 537124943253.dkr.ecr.us-east-1.amazonaws.com/frontend  #nginx 8080 image
+  imageName: 537124943253.dkr.ecr.us-east-1.amazonaws.com/expense/dev/frontend  #nginx 8080 image
   imageVersion: IMAGE_VERSION
   # replica: 2
 hpa:
@@ -7,4 +7,4 @@ hpa:
 service:
   servicePort: 8080   #nginx I changes to 8080, defalut bgibx listnes at 80
 tgb:
-  arn: "arn:aws:elasticloadbalancing:us-east-1:537124943253:targetgroup/expense-dev-frontend/acda3c710fda1014" #change tghisbTG ARN
+  arn: "arn:aws:elasticloadbalancing:us-east-1:537124943253:targetgroup/expense-dev-frontend/01be47fa3d8e5b96" #change tghisbTG ARN

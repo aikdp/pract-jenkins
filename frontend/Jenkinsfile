@@ -37,7 +37,8 @@ pipeline{
         //install docker in jenkins agent, if u are running this satge in agent.
         stage("Build docker Image"){
             steps{
-                withCredentials([[credentialsId: 'aws-creds', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                // withCredentials([[credentialsId: 'aws-creds', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                 withCredentials([aws(credentialsId: "aws-creds")]) {
                      sh """
                         cd frontend
                         
@@ -54,7 +55,8 @@ pipeline{
         }
         stage("Deploy to Application to Kubernetes"){
             steps{
-                withCredentials([[credentialsId: 'aws-creds', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                // withCredentials([[credentialsId: 'aws-creds', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                withCredentials([aws(credentialsId: "aws-creds")]) {
                     sh """
                         cd frontend/helm
 
@@ -62,7 +64,7 @@ pipeline{
 
                         sed -i 's/IMAGE_VERSION/${imageVesrion}/g' values-${params.ENVIRONMENT}.yaml
 
-                        helm upgrade --install ${params.component} -n ${project} -f values-${params.ENVIRONMENT}.yaml
+                        helm upgrade --install ${params.component} -n ${project} -f values-${params.ENVIRONMENT}.yaml .
                     """
                 }
             }
