@@ -61,7 +61,7 @@ pipeline{
                     sh """
                         cd frontend/helm
 
-                        aws eks update-kubeconfig -- region ${region} --name ${project}-${params.ENVIRONMENT}
+                        aws eks update-kubeconfig --region ${region} --name ${project}-${params.ENVIRONMENT}
 
                         sed -i 's/IMAGE_VERSION/${imageVersion}/g' values-${params.ENVIRONMENT}.yaml
 
