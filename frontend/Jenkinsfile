@@ -63,7 +63,7 @@ pipeline{
 
                         aws eks update-kubeconfig -- region ${region} --name ${project}-${params.ENVIRONMENT}
 
-                        sed -i 's/IMAGE_VERSION/${imageVesrion}/g' values-${params.ENVIRONMENT}.yaml
+                        sed -i 's/IMAGE_VERSION/${imageVersion}/g' values-${params.ENVIRONMENT}.yaml
 
                         helm upgrade --install ${params.component} -n ${project} -f values-${params.ENVIRONMENT}.yaml .
                     """
