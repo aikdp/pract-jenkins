@@ -66,13 +66,14 @@ pipeline{
         //You should have INFRA Ready ready(MySQL ALso), before run this stage
         stage("Deploy to Application to Kubernetes"){
             steps{
-                withAWS(region: 'us-east-1', credentials: 'aws-creds'){
+                // withAWS(region: 'us-east-1', credentials: 'aws-creds'){
+                withCredentials([aws(credentialsId: "aws-creds")]) {
                     sh """
                         cd backend/helm
 
                         aws eks update-kubeconfig -- region ${region} --name ${project}-${params.ENVIRONMENT}
 
-                        sed -i 's/IMAGE_VERSION/${imageVesrion}/g' values-${params.ENVIRONMENT}.yaml
+                        sed -i 's/IMAGE_VERSION/${imageVersion}/g' values-${params.ENVIRONMENT}.yaml
 
                         helm upgrade --install ${params.component} -n ${project} -f values-${params.ENVIRONMENT}.yaml
                     """
