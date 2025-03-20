@@ -45,7 +45,7 @@ spec:
       initContainers: #init container run before main contaner run, if mysql is not up and runing, then backend POD will will
         - name: check-mysql
           image: busybox:1.28
-          command: ['sh', '-c', "until nslookup 3306; do echo waiting for mysql; sleep 2; done"]
+          command: ['sh', '-c', "until nslookup 'mysql-dev.telugudevops.online'; do echo waiting for mysql; sleep 2; done"]
       containers:
           - name: backend
             image: "{{ .Values.deployment.imageName }}:{{ .Values.deployment.imageVersion }}"
