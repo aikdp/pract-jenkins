@@ -10,6 +10,7 @@ pipeline{
         ansiColor('xterm')
     }
     environment{
+        project = 'expense'
         docker_user_id = 'kdprasad028'
         component = ''
         region = 'us-east-1'
@@ -18,6 +19,7 @@ pipeline{
     }
     parameters {
     string(name: 'component', defaultValue: 'backend', description: 'Component name')
+    choice(name: 'ENVIRONMENT', choices: ['dev', 'qa', 'uat', 'pre-pod', 'prod'], description: 'Select environment')
 
     }
     stages{
@@ -54,11 +56,11 @@ pipeline{
                         
                         aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com
 
-                        docker build -t  ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com/${params.component}:${imageVersion} .
-
+                        docker build -t ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${params.ENVIRONMENT}/${params.component}:${imageVersion} .
+                       
                         docker images
 
-                        docker push ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com/${params.component}:${imageVersion}
+                        docker push ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${params.ENVIRONMENT}/${params.component}:${imageVersion}
                     """
                 }
             }
