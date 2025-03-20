@@ -14,4 +14,4 @@ spec:
     protocol: TCP
     port: {{ .Values.service.servicePort }}  #here service
     targetPort: 8080  #container port, nginx port I chnaged to 8080, as we are using baremin OS, not opens 80
-  type: LoadBalancer
+  # type: LoadBalancer
