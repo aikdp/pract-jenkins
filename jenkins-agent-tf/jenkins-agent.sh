@@ -63,7 +63,7 @@ VALIDATE $? "Resize of VarVol"
 
 #Install NodeJS
 sudo dnf module disable nodejs -y
-sudo dnf enable module nodejs:20 -y
+sudo dnf module enable nodejs:20 -y
 sudo dnf install nodejs -y
 VALIDATE $? "NodeJS installation"
 
