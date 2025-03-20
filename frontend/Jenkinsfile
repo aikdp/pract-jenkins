@@ -24,13 +24,14 @@ pipeline{
         stage("Read Vesrion"){
             steps{
                 script {
-                    dir('frontend/code')
-                    // Read the JSON file
-                    def packageJson = readJSON file: 'package.json'
-                    imageVersion = packageJson.version
-                    // Access JSON properties
-                    // echo "Version is: ${packageJson.version}"   //you can directly use this line as well
-                    echo "Version is: ${imageVersion}"
+                    dir('frontend/code'){
+                        // Read the JSON file
+                        def packageJson = readJSON file: 'package.json'
+                        imageVersion = packageJson.version
+                        // Access JSON properties
+                        // echo "Version is: ${packageJson.version}"   //you can directly use this line as well
+                        echo "Version is: ${imageVersion}"
+                    }
                 }          
             }
         }
