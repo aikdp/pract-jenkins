@@ -18,7 +18,7 @@ variable "sg_id" {
 variable "instance_type" {
     default = {
       master = "t3.small"
-      agent = "t3.micro"
+      agent = "t3.small"
     }
 }
 
