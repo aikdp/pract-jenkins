@@ -1,8 +1,8 @@
 # Jenkins CICD
-* Create Jenkins Server (EC2). Install Jenkin server Commands.
-* Create Jnekins Agnet (EC2). Install required tools Java, terraform, docker, kubecrl, eksctl, helm, etc
+* Create Jenkins Server (EC2). Install Jenkins Commands.
+* Create Jenkins Agent (EC2). Install required tools Java, terraform, docker, kubectl, eksctl, helm, etc
 
-* Open browser, Sewrch: <Jenkins-Server-public-ip>:8080 or create route 53 record as jenkins.telugudevops.online:8080
+* Open browser, Search: <Jenkins-Server-public-ip>:8080 or create route 53 record as jenkins.telugudevops.online:8080
 
 # Install Jenkins Plugins:
 1. Pipeline Utility Steps
@@ -14,13 +14,64 @@
 7. SonarQube Scanner
 8. Docker:Pipeline
 
-* Add Credentails of AWS account and if any.
-* Create Pipelines
-* Run Builds
+# BAstion:
+docker:
+```
+sudo dnf -y install dnf-plugins-core
+sudo dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+sudo systemctl start docker
+sudo usermod -aG docker ec2-user
+sudo docker run hello-world
+docker --version
+```
 
+eksctl:
+
+```
+ARCH=amd64
+PLATFORM=$(uname -s)_$ARCH
+
+sudo curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+sudo tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
+sudo mv /tmp/eksctl /usr/local/bin
+```
+
+kubectl:
+```
+sudo curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.32.0/2024-12-20/bin/linux/amd64/kubectl
+sudo chmod +x ./kubectl
+sudo mv kubectl /usr/local/bin/kubectl
+```
+
+helm:
+```
+sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+sudo chmod 700 get_helm.sh
+sudo ./get_helm.sh
+````
+
+Resize:
+```
+lsblk
+growpart /dev/nvme0n1 4
+lvextend -l +50%FREE /dev/RootVG/rootVol 
+lvextend -l +50%FREE /dev/RootVG/varVol
+xfs_growfs /
+xfs_growfs /var
+```
+
+kubens:
+```
+sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
+sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
+sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+```
 
 # RUN RDS Configurations
 
+Take Bastion(EC2) as Client (should installed eksctl, kubectl, aws configure, docker, helm, resize, etc.)
+Run below commands
 ```
 mysql -h <rds-endpoint_address> -u root -p<DB_Password>
 ```
@@ -58,6 +109,7 @@ FLUSH PRIVILEGES;
 ```
 # RUN AWS LB Cpntroller Configuration to communicate with AWS ALB
 * Should install LB controller along with some OIDC, IAM Policies, IAM Role, Service Account, Helm to install AWS Load balancer Controller etc.
+
 
 1. Create an IAM OIDC provider. You can skip this step if you already have one for your cluster.
 ```
@@ -115,6 +167,7 @@ eks-pod-identity-agent-qqkz2                    1/1     Running   0          16m
 kube-proxy-7dgzm                                1/1     Running   0          17m
 kube-proxy-z4zdb                                1/1     Running   0          17m
 
+Note: Create NAMESPACE
 
 ## Target Group Binding:
 * If you are using AWS Application Load Balancer which is creating mannually or provisioing with terraform. 
@@ -139,3 +192,28 @@ spec:
   targetGroupARN: arn:aws:elasticloadbalancing:us-east-1:537124943253:targetgroup/expense-dev-frontend/acda3c710fda1014
   targetType: ip
 ```
+
+# Connect Node (Jenkins-AGENT):
+* Install required tools Java, terraform, docker, kubectl, eksctl, helm, Resize: /var, /home, /var/tmp etc
+* Add Credentails and if any (AWS, docker, EC2, SonarQube, etc)
+* Create Pipelines
+* Build Pipelines
+
+## Backend:
+* Makesure Infra and pipleines ready without any errors or issues.
+* In backend, configmap DB_HOST should replace with RDS endpoint address.
+* In Helm (backend): replace imageName to ECR imageURI of backend
+Build Stages:
+* Read Version 
+* Install npm dependecies mentioned in the package.json
+* Build image
+* Deploy in K8s
+* Code Scans and Image Scans, Unit Test, etc
+
+## Frontend:
+* Makesure Infra and pipleines ready without any errors or issues.
+* In Helm (Frontend): replace imageName with ECR imageURI of frontend
+* Build Image
+* Deploy Image
+* Code Scans and Image Scans, Unit Test, etc
+

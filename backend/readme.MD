@@ -23,7 +23,8 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 4. AWS steps    
 5. Rebuilder    : check previous builds
 6. AnsiColor    : Visualisation
-7. SonarQube Scanner, etc
+7. Docker Pipeline
+8. SonarQube Scanner
 
 # Create Agent in jenkins:
 * Configure Master with Agent Node. NewNode-->Name: AGNET-1, Root--> /home/ec2-user/jenkins-agent, Label: AGENT-1(U need to use same name in the jenkins pipeline, then only pipeline will run in this agent), via SSH--> ADD Credentials of user and password of EC2 or Keys.

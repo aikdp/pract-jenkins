@@ -43,12 +43,10 @@ growpart /dev/nvme0n1 4
 VALIDATE $? "Disk Partition"
 
 lvextend -l +50%FREE /dev/RootVG/rootVol 
-
-
 lvextend -l +50%FREE /dev/RootVG/varVol
 
 xfs_growfs /
 VALIDATE $? "Resize of RootVol"
 
 xfs_growfs /var
-VALIDATE $? "Resize of VarVol"
+VALIDATE $? "Resize of VarVol for MASTER"
