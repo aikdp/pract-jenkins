@@ -1,0 +1,123 @@
+pipeline{
+    //agent any
+    agent{
+        label 'AGENT-1'
+    }
+    options{
+        disableConcurrentBuilds() 
+        // retry(2)    //it will retry 2 times, if pipeline failure
+        timeout(time: 30, unit: 'MINUTES') //pipeline will stop/abort when specified time period
+        ansiColor('xterm')
+    }
+    environment{
+        project = 'expense'
+        environment = ''
+        component = ''
+        region = 'us-east-1'
+        aws_account_id = '537124943253'
+    }
+    parameters {
+    string(name: 'component', defaultValue: 'backend', description: 'Component name')
+    choice(name: 'ENVIRONMENT', choices: ['dev', 'qa', 'uat', 'pre-pod', 'prod'], description: 'Select environment')
+    }
+    stages{
+        stage("Read Vesrion"){
+            steps{
+                script {
+                    dir('backend/node'){
+                        // Read the JSON file
+                        def packageJson = readJSON file: 'package.json'
+                        imageVersion = packageJson.version
+                        // Access JSON properties
+                        // echo "Version is: ${packageJson.version}"   //you can directly use this line as well
+                        echo "Version is: ${imageVersion}"
+                    }
+                }          
+            }
+        }
+        //Installing dependencies that are mentioned in the package.json file for nodejs(For Java--> pom.xml, mvn package manager)
+        stage("Install dependencies"){
+            steps{
+                sh """
+                    cd backend/node
+
+                    npm install
+                """
+            }
+        }
+        //SOnarQube code quality check
+        stage('SonarQube analysis') {
+            environment {
+                SCANNER_HOME = tool 'sonar-6.0'
+            }
+            steps {
+                withSonarQubeEnv(credentialsId: 'sonar-token', installationName: 'Sonar') {
+                    sh """
+                        $SCANNER_HOME/bin/sonar-6.0 \
+                        
+                    """
+                }
+            }
+        }
+        //Sonar QUality Wait for PASS, if FAILED, build also FAIL.
+        stage('Sonar Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        //install docker in jenkins agent
+        stage("Build docker Image"){
+            steps{
+                withCredentials([aws(credentialsId: "aws-creds")]) {
+                    sh """
+                        cd backend
+                        
+                        aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com
+
+                        docker build -t ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${params.ENVIRONMENT}/${params.component}:${imageVersion} .
+                       
+                        docker images
+
+                        docker push ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${params.ENVIRONMENT}/${params.component}:${imageVersion}
+                    """
+                }
+            }
+        }
+        //You should have INFRA Ready ready(MySQL ALso), before run this stage
+        stage("Deploy to Application to Kubernetes"){
+            steps{
+                // withAWS(region: 'us-east-1', credentials: 'aws-creds'){
+                withCredentials([aws(credentialsId: "aws-creds")]) {
+                    sh """
+                        cd backend/helm
+
+                        aws eks update-kubeconfig --region ${region} --name ${project}-${params.ENVIRONMENT}
+
+                        sed -i 's/IMAGE_VERSION/${imageVersion}/g' values-${params.ENVIRONMENT}.yaml
+
+                        helm upgrade --install ${params.component} -n ${project} -f values-${params.ENVIRONMENT}.yaml .
+                    """
+                }
+            }
+        }
+    }
+    post{
+        //post build section
+        always{
+            echo "I always run when pipeline running"
+            deleteDir()    //Cleans up workspace after every build.
+        }
+        failure{
+            echo "Pipeline is FAILED"
+        }
+        success {
+            echo "Pipeline is Success"
+        }
+        regression {
+            echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
+        }
+    }
+}
+

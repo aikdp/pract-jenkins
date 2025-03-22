@@ -45,7 +45,9 @@ spec:
       initContainers: #init container run before main contaner run, if mysql is not up and runing, then backend POD will will
         - name: check-mysql
           image: busybox:1.28
-          command: ['sh', '-c', "until nslookup mysql; do echo waiting for mysql; sleep 2; done"]
+          # command: ['sh', '-c', "until nslookup 'expense-dev.c96s2yeo6pdv.us-east-1.rds.amazonaws.com'; do echo waiting for mysql; sleep 2; done"]
+          # command: ["until nc -z expense-dev.c96s2yeo6pdv.us-east-1.rds.amazonaws.com 3306; do echo 'Waiting for MySQL RDS to be available...''; sleep 2; done"]
+          command: ["sh", "-c", "until nc -z expense-dev.c96s2yeo6pdv.us-east-1.rds.amazonaws.com 3306; do echo 'Waiting for MySQL RDS to be available...'; sleep 2; done"]
       containers:
           - name: backend
             image: "{{ .Values.deployment.imageName }}:{{ .Values.deployment.imageVersion }}"
@@ -69,4 +71,9 @@ spec:
                 path: /health
                 port: 8080
               initialDelaySeconds: 15
+              periodSeconds: 10
+            startupProbe:
+              tcpSocket:
+                port: 8080
+              failureThreshold: 30
               periodSeconds: 10

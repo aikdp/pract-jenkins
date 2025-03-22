@@ -1,0 +1,10 @@
+deployment:
+  imageName: 537124943253.dkr.ecr.us-east-1.amazonaws.com/expense/dev/frontend  #This is AW ECR Image URL, otherwise change accordingly
+  imageVersion: IMAGE_VERSION
+  # replica: 2
+hpa:
+  cpuUtilisation: 15
+service:
+  servicePort: 8080   #nginx I changes to 8080, defalut nginx listenss at 80
+tgb:
+  arn: "arn:aws:elasticloadbalancing:us-east-1:537124943253:targetgroup/expense-dev-frontend/01be47fa3d8e5b96" #change tghisbTG ARN

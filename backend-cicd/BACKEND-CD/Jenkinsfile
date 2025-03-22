@@ -1,0 +1,70 @@
+pipeline{
+    //agent any
+    agent{
+        label 'AGENT-1'
+    }
+    options{
+        disableConcurrentBuilds() 
+        // retry(2)    //it will retry 2 times, if pipeline failure
+        timeout(time: 30, unit: 'MINUTES') //pipeline will stop/abort when specified time period
+        ansiColor('xterm')
+    }
+    environment{
+        project = 'expense'
+        environment = ''
+        component = ''
+        region = ''
+        aws_account_id = '537124943253'
+    }
+    parameters {
+        //these parameters Access in CD, by passed environment variables from BACKEND-CI
+        string(name: 'component', description: 'Component name')
+        string(name: 'region', description: 'region value')
+        string(name: 'version', description: 'Enter application Version')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'qa', 'uat', 'pre-pod', 'prod'], description: 'Select environment')
+    }
+    stages{
+        stage('Setup environment'){
+            steps{
+                    region = params.region
+                    component = params.component
+                    environment = params.ENVIRONMENT
+                    appversion = params.version
+            }
+        }
+
+        //You should have INFRA Ready ready(MySQL ALso), before run this stage
+        stage("Deploy Application to Kubernetes"){
+            steps{
+                // withAWS(region: 'us-east-1', credentials: 'aws-creds'){
+                withCredentials([aws(credentialsId: "aws-creds")]) {
+                    sh """
+                        cd backend-cicd/BACKEND-CD/helm
+
+                        aws eks update-kubeconfig --region ${region} --name ${project}-${environment}
+
+                        sed -i 's/IMAGE_VERSION/${appversion}/g' values-${environment}.yaml
+
+                        helm upgrade --install ${component} -n ${project} -f values-${environment}.yaml .
+                    """
+                }
+            }
+        }
+    }
+    post{
+        //post build section
+        always{
+            echo "I always run when pipeline running"
+            deleteDir()    //Cleans up workspace after every build.
+        }
+        failure{
+            echo "Pipeline is FAILED"
+        }
+        success {
+            echo "Pipeline is Success"
+        }
+        regression {
+            echo "It will execute if Pipeline status is failure, unstable, or aborted and the previous run was successful"
+        }
+    }
+}

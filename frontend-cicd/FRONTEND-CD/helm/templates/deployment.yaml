@@ -1,0 +1,59 @@
+#create frontend YamlFile
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: frontend
+  namespace: expense
+  labels:
+    project: robo
+    state: qa
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: robo
+      state: qa
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        project: robo
+        state: qa
+        tier: frontend
+    spec:
+      # containers:
+      #   - name: frontend
+      #     image: "{{ .Values.deployment.imageName }}:{{ .Values.deployment.imageVersion }}"
+      #     resources:
+      #       requests:
+      #         cpu: 100m
+      #         memory: 128Mi
+      #       limits:            #limits should be greater than or equal to requests
+      #         cpu: 100m
+      #         memory: 128Mi
+      initContainers: #init container run before main contaner run, if backend is not up and runing, then forntend POD won't start.
+        - name: check-backend
+          image: busybox:1.28
+          command: ['sh', '-c', "until nslookup backend; do echo waiting for mysql; sleep 2; done"]
+      containers:
+        - name: frontend
+          image: "{{ .Values.deployment.imageName }}:{{ .Values.deployment.imageVersion }}"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:            #limits should be greater than or equal to requests
+              cpu: 100m
+              memory: 128Mi
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
