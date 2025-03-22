@@ -56,7 +56,7 @@ pipeline{
                 }
             }
         }
-        stage('Trigger Second Pipeline') {
+        stage('Trigger Deploy to EKS') {
             when {
                 expression {params.deploy}
             }
