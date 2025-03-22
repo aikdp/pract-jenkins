@@ -61,7 +61,7 @@ pipeline{
                 expression {params.deploy}
             }
             steps {
-                // Trigger the second pipeline
+                // Trigger the second pipeline 'FRONTEND-CD' this is path of jenkins(if it is in root level) not repo path
                 build job: 'FRONTEND-CD', parameters: [
                     //these parameters or env vars passed to BACKEND-CD, u can access there
                     string(name: 'component', value: "${params.component}"),

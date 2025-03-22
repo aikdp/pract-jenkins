@@ -10,3 +10,8 @@ docker run -d --name sonarqube \
 -v sonarqube_logs:/opt/sonarqube/logs \
 sonarqube:lts
 ```
+
+RUN:
+```
+docker run -d -p 9000:9000 sonarqube:lts
+```
