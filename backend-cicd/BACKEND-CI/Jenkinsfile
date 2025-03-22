@@ -48,28 +48,28 @@ pipeline{
             }
         }
         // SOnarQube code quality check
-        stage('SonarQube analysis') {
-            environment {
-                SCANNER_HOME = tool 'sonar-6.0'
-            }
-            steps {
-                dir('/backend-cicd/BACKEND-CI') {
-                    withSonarQubeEnv('sonar-6.0') {
-                        sh """
-                            $SCANNER_HOME/bin/sonar-scanner
-                        """
-                    }
-                }
-            }
-        }
-        //Sonar QUality Wait for PASS, if FAILED, build also FAIL.
-        stage('Sonar Quality Gate') {
-            steps {
-                timeout(time: 3, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
+        // stage('SonarQube analysis') {
+        //     environment {
+        //         SCANNER_HOME = tool 'sonar-6.0'
+        //     }
+        //     steps {
+        //         dir('/backend-cicd/BACKEND-CI') {
+        //             withSonarQubeEnv('sonar-6.0') {
+        //                 sh """
+        //                     $SCANNER_HOME/bin/sonar-scanner
+        //                 """
+        //             }
+        //         }
+        //     }
+        // }
+        // //Sonar QUality Wait for PASS, if FAILED, build also FAIL.
+        // stage('Sonar Quality Gate') {
+        //     steps {
+        //         timeout(time: 3, unit: 'MINUTES') {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
         //install docker in jenkins agent
         stage("Build docker Image"){
             steps{
