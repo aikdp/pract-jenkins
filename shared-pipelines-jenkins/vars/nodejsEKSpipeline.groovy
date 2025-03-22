@@ -104,7 +104,8 @@ def call(Map envMap){
                 }
                 steps {
                     // Trigger the second pipeline
-                    build job: 'shared-pipeline-backend/backend-shared-cd', parameters: [
+                    // build job: 'shared-pipeline-backend/backend-shared-cd', parameters: [
+                    build job: 'backend-cd', parameters: [
                         //these parameters or env vars passed to BACKEND-CD, u can access there
                         string(name: 'component', value: "${component}"),
                         string(name: 'ENVIRONMENT', value: "${environment}"),
