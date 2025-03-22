@@ -53,7 +53,7 @@ pipeline{
                 SCANNER_HOME = tool 'sonar-6.0'
             }
             steps {
-                withSonarQubeEnv(credentialsId: 'sonar-token', installationName: 'Sonar') {
+                withSonarQubeEnv('sonar-6.0') {
                     sh """
                         $SCANNER_HOME/bin/sonar-scanner \
                     """
