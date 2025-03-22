@@ -26,10 +26,12 @@ pipeline{
     stages{
         stage('Access environment Variables from CI Pipeline'){
             steps{
-                component = params.component
-                region = params.region
-                environment = params.ENVIRONMENT
-                appVersion = params.version
+                script{
+                    component = params.component
+                    region = params.region
+                    environment = params.ENVIRONMENT
+                    appVersion = params.version
+                }
             }
         }
         //install docker in jenkins agent, if u are running this satge in agent.
