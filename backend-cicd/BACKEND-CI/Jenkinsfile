@@ -105,8 +105,8 @@ pipeline{
                 expression {params.deploy}
             }
             steps {
-                // Trigger the second pipeline
-                build job: '../BACKEND-CD', parameters: [
+                // Trigger the second pipeline , I 
+                build job: 'backend-cd', parameters: [
                     //these parameters or env vars passed to BACKEND-CD, u can access there
                     string(name: 'component', value: "${params.component}"),
                     string(name: 'ENVIRONMENT', value: "${params.ENVIRONMENT}"),
