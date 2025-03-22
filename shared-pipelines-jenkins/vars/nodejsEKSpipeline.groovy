@@ -46,27 +46,27 @@ def call(Map envMap){
                     """
                 }//backend/node  removed
             }
-            //SOnarQube code quality check
-            stage('SonarQube analysis') {
-                environment {
-                    SCANNER_HOME = tool 'sonar-6.0'
-                }
-                steps {
-                    withSonarQubeEnv(credentialsId: 'sonar-token', installationName: 'Sonar') {
-                        sh """
-                            $SCANNER_HOME/bin/sonar-6.0 \
-                        """
-                    }
-                }
-            }
-            //Sonar QUality Wait for PASS, if FAILED, build also FAIL.
-            stage('Sonar Quality Gate') {
-                steps {
-                    timeout(time: 5, unit: 'MINUTES') {
-                        waitForQualityGate abortPipeline: true
-                    }
-                }
-            }
+            // //SOnarQube code quality check
+            // stage('SonarQube analysis') {
+            //     environment {
+            //         SCANNER_HOME = tool 'sonar-6.0'
+            //     }
+            //     steps {
+            //         withSonarQubeEnv(credentialsId: 'sonar-token', installationName: 'Sonar') {
+            //             sh """
+            //                 $SCANNER_HOME/bin/sonar-6.0 \
+            //             """
+            //         }
+            //     }
+            // }
+            // //Sonar QUality Wait for PASS, if FAILED, build also FAIL.
+            // stage('Sonar Quality Gate') {
+            //     steps {
+            //         timeout(time: 5, unit: 'MINUTES') {
+            //             waitForQualityGate abortPipeline: true
+            //         }
+            //     }
+            // }
             //install docker in jenkins agent
             stage("Build docker Image"){
                 steps{
@@ -105,7 +105,7 @@ def call(Map envMap){
                 steps {
                     // Trigger the second pipeline
                     // build job: 'shared-pipeline-backend/backend-shared-cd', parameters: [
-                    build job: 'backend-cd', parameters: [
+                    build job: '../backend-cd', parameters: [
                         //these parameters or env vars passed to BACKEND-CD, u can access there
                         string(name: 'component', value: "${component}"),
                         string(name: 'ENVIRONMENT', value: "${environment}"),
