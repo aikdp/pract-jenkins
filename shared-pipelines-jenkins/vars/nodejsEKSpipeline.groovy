@@ -110,7 +110,7 @@ def call(Map envMap){
                         string(name: 'ENVIRONMENT', value: "${environment}"),
                         string(name: 'region', value: "${region}"),
                         string(name: 'version', value: "${imageVersion}")
-                    ], Wait: true
+                    ], wait: true
                 }
             }
         }
