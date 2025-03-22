@@ -53,10 +53,12 @@ pipeline{
                 SCANNER_HOME = tool 'sonar-6.0'
             }
             steps {
-                withSonarQubeEnv('sonar-6.0') {
-                    sh """
-                        $SCANNER_HOME/bin/sonar-scanner
-                    """
+                dir('/backend-cicd/BACKEND-CI') {
+                    withSonarQubeEnv('sonar-6.0') {
+                        sh """
+                            $SCANNER_HOME/bin/sonar-scanner
+                        """
+                    }
                 }
             }
         }
