@@ -112,7 +112,7 @@ pipeline{
                     string(name: 'ENVIRONMENT', value: "${params.ENVIRONMENT}"),
                     string(name: 'region', value: "${params.region}"),
                     string(name: 'version', value: "${imageVersion}")
-                ], Wait: true
+                ], wait: true
             }
         }
     }
