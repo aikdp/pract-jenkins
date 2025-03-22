@@ -7,4 +7,4 @@ hpa:
 service:
   servicePort: 8080   #nginx I changes to 8080, defalut bgibx listnes at 80
 tgb:
-  arn: "arn:aws:elasticloadbalancing:us-east-1:537124943253:targetgroup/expense-dev-frontend/acda3c710fda1014" #change tghisbTG ARN
+  arn: "arn:aws:elasticloadbalancing:us-east-1:537124943253:targetgroup/expense-dev-frontend/cff8b63c76fe91e1" #change tghisbTG ARN
