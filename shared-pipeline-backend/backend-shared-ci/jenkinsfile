@@ -1,4 +1,4 @@
-@Library('pract-jenkins') _
+@Library('shared-pipelines-jenkins') _
 
 // Define environment variables using configMap function
 def envMap = configMap(
