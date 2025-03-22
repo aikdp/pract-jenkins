@@ -1,0 +1,18 @@
+@Library('pract-jenkins/shared-pipeline-jenkins') _
+
+// Define environment variables using configMap function
+def envMap = configMap(
+        // GIT_BRANCH: env.GIT_BRANCH ?: 'main',
+        PROJECT: params.project ?: 'expense',
+        COMPONENT: params.component ?: 'backend',
+        ENVIRONMENT: params.ENVIRONMENT ?: 'dev',
+        REGION: params.region ?: 'us-east-1'
+)
+
+// Convert GIT_BRANCH to lowercase and check if it equals "main"
+if (!env.GIT_BRANCH.equalsIgnoreCase("main")) {
+    nodejsEKSpipeline(envMap)
+} else {
+    echo "Branch is main. Skipping deployment."
+    echo "Please follow yhe Prod deployment porcess."
+}

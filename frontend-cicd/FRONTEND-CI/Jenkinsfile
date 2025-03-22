@@ -26,7 +26,7 @@ pipeline{
         stage("Read Vesrion"){
             steps{
                 script {
-                    dir('frontend/code'){
+                    dir('frontend-cicd/FRONTEND-CI/code'){
                         // Read the JSON file
                         def packageJson = readJSON file: 'package.json'
                         imageVersion = packageJson.version
@@ -43,7 +43,7 @@ pipeline{
                 // withCredentials([[credentialsId: 'aws-creds', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                  withCredentials([aws(credentialsId: "aws-creds")]) {
                      sh """
-                        cd frontend
+                        cd frontend-cicd/FRONTEND-CI
                         
                         aws ecr get-login-password --region ${params.region} | docker login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com
 
@@ -62,7 +62,7 @@ pipeline{
             }
             steps {
                 // Trigger the second pipeline
-                build job: '../BACKEND-CD', parameters: [
+                build job: '../FRONTEND-CD', parameters: [
                     //these parameters or env vars passed to BACKEND-CD, u can access there
                     string(name: 'component', value: "${params.component}"),
                     string(name: 'ENVIRONMENT', value: "${params.ENVIRONMENT}"),

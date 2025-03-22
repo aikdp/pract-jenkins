@@ -15,6 +15,7 @@ pipeline{
         component = ''
         region = ''
         aws_account_id = '537124943253'
+        appversion = ''
     }
     parameters {
         //these parameters Access in CD, by passed environment variables from BACKEND-CI
@@ -26,9 +27,9 @@ pipeline{
     stages{
         stage('Setup environment'){
             steps{
-                    reg = params.region
-                    comp = params.component
-                    environ = params.ENVIRONMENT
+                    region = params.region
+                    component = params.component
+                    environment = params.ENVIRONMENT
                     appversion = params.version
             }
         }
@@ -39,13 +40,13 @@ pipeline{
                 // withAWS(region: 'us-east-1', credentials: 'aws-creds'){
                 withCredentials([aws(credentialsId: "aws-creds")]) {
                     sh """
-                        cd backend-cicd/BACKEND-CD/helm
+                        cd shared-pipeline-backend/backend-shared-cd/helm
 
-                        aws eks update-kubeconfig --region ${reg} --name ${project}-${environ}
+                        aws eks update-kubeconfig --region ${region} --name ${project}-${environment}
 
-                        sed -i 's/IMAGE_VERSION/${appversion}/g' values-${environ}.yaml
+                        sed -i 's/IMAGE_VERSION/${appversion}/g' values-${environment}.yaml
 
-                        helm upgrade --install ${comp} -n ${project} -f values-${environ}.yaml .
+                        helm upgrade --install ${component} -n ${project} -f values-${environment}.yaml .
                     """
                 }
             }
