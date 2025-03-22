@@ -40,7 +40,7 @@ pipeline{
                 // withCredentials([[credentialsId: 'aws-creds', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                 withCredentials([aws(credentialsId: "aws-creds")]) {
                     sh """
-                        cd frontend-cid/FRONTEND-CD/helm
+                        cd frontend-cicd/FRONTEND-CD/helm
 
                         aws eks update-kubeconfig --region ${region} --name ${project}-${environment}
 
