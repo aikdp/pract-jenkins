@@ -54,7 +54,7 @@ def call(Map envMap){
             //     steps {
             //         withSonarQubeEnv(credentialsId: 'sonar-token', installationName: 'Sonar') {
             //             sh """
-            //                 $SCANNER_HOME/bin/sonar-6.0 \
+            //                 $SCANNER_HOME/bin/sonar-scanner 
             //             """
             //         }
             //     }
@@ -84,20 +84,20 @@ def call(Map envMap){
                     }//  cd backend removed
                 }
             }
-            //You should have INFRA Ready ready(MySQL ALso), before run this stage
-            // stage("Trigger Deploy image to K8s"){
-            //     when {
-            //         expression {params.deploy}
-            //     }
-            //     steps{
-            //        build job: '../BACKEND-CD', parameters: [
-            //            [$class: 'StringParameterValue', name: 'ENVIRONMENT', value: "${environment}"],
-            //            [$class: 'StringParameterValue', name: 'component', value: "${component}"],
-            //            [$class: 'StringParameterValue', name: 'region', value: "${region}"],
-            //            [$class: 'StringParameterValue', name: 'version', value: "${imageVersion}"]
-            //            ]
-            //        }
-            // }
+            // You should have INFRA Ready ready(MySQL ALso), before run this stage
+            /*stage("Trigger Deploy image to K8s"){
+                when {
+                    expression {params.deploy}
+                }
+                steps{
+                   build job: '../BACKEND-CD', parameters: [
+                       [$class: 'StringParameterValue', name: 'ENVIRONMENT', value: "${environment}"],
+                       [$class: 'StringParameterValue', name: 'component', value: "${component}"],
+                       [$class: 'StringParameterValue', name: 'region', value: "${region}"],
+                       [$class: 'StringParameterValue', name: 'version', value: "${imageVersion}"]
+                       ]
+                   }
+            }*/
             stage('Trigger Deploy to EKS') {
                 when {
                     expression {params.deploy}

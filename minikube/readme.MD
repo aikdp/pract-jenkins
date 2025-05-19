@@ -63,3 +63,4 @@ Service:
 kubectl get svc nginx
 minikube service nginx --url
 ```
+

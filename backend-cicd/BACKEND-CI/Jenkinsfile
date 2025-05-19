@@ -107,7 +107,7 @@ pipeline{
                 expression {params.deploy}
             }
             steps {
-                // Trigger the second pipeline , I 
+                // Trigger the second pipeline , backend-cd is not git repo path, it is inside jenkins newitem folder paths
                 build job: 'backend-cd', parameters: [
                     //these parameters or env vars passed to BACKEND-CD, u can access there
                     string(name: 'component', value: "${params.component}"),

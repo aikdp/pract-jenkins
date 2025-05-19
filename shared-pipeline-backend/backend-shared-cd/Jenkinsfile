@@ -27,10 +27,12 @@ pipeline{
     stages{
         stage('Setup environment'){
             steps{
+                script{
                     region = params.region
                     component = params.component
                     environment = params.ENVIRONMENT
                     appversion = params.version
+                }
             }
         }
 
